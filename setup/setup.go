@@ -19,6 +19,8 @@ func Router() *gin.Engine {
 
 	r.Use(middlewares.SecureFunc())
 
+	r.Use(Session())
+
 	r.Use(cors.New(cors.Config{
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
