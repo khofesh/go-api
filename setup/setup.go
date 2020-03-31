@@ -11,6 +11,9 @@ import (
 
 // Router : initiate routers
 func Router() *gin.Engine {
+	// Run Gin in Release mode
+	// gin.SetMode(gin.ReleaseMode)
+
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
@@ -25,8 +28,13 @@ func Router() *gin.Engine {
 	})
 
 	// api
-	v1 := r.Group("/api")
+	v1 := r.Group("/api/v0")
 	routes.UserRoute(v1.Group("/users"))
+
+	// 404
+	r.NoRoute(func(c *gin.Context) {
+		c.JSON(http.StatusNotFound, gin.H{"message": "Not Found"})
+	})
 
 	return r
 }
