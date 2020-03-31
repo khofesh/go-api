@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/khofesh/simple-go-api/middlewares"
 	"github.com/khofesh/simple-go-api/routes"
 )
 
@@ -15,6 +16,8 @@ func Router() *gin.Engine {
 	// gin.SetMode(gin.ReleaseMode)
 
 	r := gin.Default()
+
+	r.Use(middlewares.SecureFunc())
 
 	r.Use(cors.New(cors.Config{
 		AllowCredentials: true,
