@@ -19,7 +19,7 @@ func Router() *gin.Engine {
 
 	r.Use(middlewares.SecureFunc())
 
-	r.Use(Session())
+	r.Use(CookieSession())
 
 	r.Use(cors.New(cors.Config{
 		AllowCredentials: true,

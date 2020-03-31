@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Session : setup gin-gonic sessions
-func Session() gin.HandlerFunc {
+// CookieSession : setup gin-gonic sessions
+func CookieSession() gin.HandlerFunc {
 	var sessionSecret string = os.Getenv("SESSION_SECRET")
 
 	store := cookie.NewStore([]byte(sessionSecret))
