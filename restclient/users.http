@@ -5,3 +5,16 @@ GET http://localhost:8090/api/v0/users/test
 GET http://localhost:8090/api/v0/sdfsdfsd
 
 ###
+
+POST http://localhost:8090/api/v0/auth/signup
+content-type: application/json
+
+{
+  "email": "fahmi@ed.com",
+  "password": "something",
+  "passwordConfirmation": "something",
+  "type": "nonSubscriber",
+  "demo": true
+}
+
+###
