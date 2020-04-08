@@ -4,15 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/khofesh/simple-go-api/models"
 )
-
-// SignupData :
-type SignupData struct {
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	Type     string `json:"type" binding:"required"`
-	Demo     string `json:"demo" binding:"required"`
-}
 
 // Login : handle user's login
 func Login() {}
@@ -22,10 +15,13 @@ func Logout() {}
 
 // Signup : handle signing up
 func Signup(c *gin.Context) {
-	var data SignupData
+	var data models.UserModel
 
-	if err := c.ShouldBindJSON(&data); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	err := c.ShouldBindJSON(&data)
+	if err != nil {
+		c.JSON(http.StatusNotAcceptable, gin.H{"error": err.Error()})
 	}
-	return
+
+	data.HashPassword(data.Password)
+	data.CreateUser(c)
 }
