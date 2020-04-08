@@ -8,6 +8,7 @@ For Fun
 
 - [Requirements](#requirements)
 - [Getting started](#getting-started)
+- [References](#references)
 
 # Requirements
 
@@ -22,3 +23,7 @@ For Fun
 sudo systemctl start docker.service
 sudo docker run -d -p 27017:27017 --name mongodb mongo:4.2
 ```
+
+# References
+
+1. https://github.com/wangzitian0/golang-gin-starter-kit
