@@ -17,26 +17,26 @@ type UserBio struct {
 
 // UserModel : user's model
 type UserModel struct {
-	Email        string  `bson:"email"`
-	Bio          UserBio `bson:"bio"`
-	PasswordHash string  `bson:"passwordHash"`
-	Type         string  `bson:"type"`
-	Demo         bool    `bson:"demo"`
+	Email    string  `bson:"email" json:"email" binding:"required"`
+	Bio      UserBio `bson:"bio" json:"bio" binding:"omitempty"`
+	Password string  `bson:"password" json:"password" binding:"required"`
+	Type     string  `bson:"type" json:"type" binding:"required"`
+	Demo     bool    `bson:"demo" json:"demo" binding:"required"`
 }
 
-func (u *UserModel) hashPassword(password string) error {
+func (u *UserModel) HashPassword(password string) error {
 	if len(password) == 0 {
 		return errors.New("Password cannot be empty")
 	}
 	bytePassword := []byte(password)
 	passwordHash, _ := bcrypt.GenerateFromPassword(bytePassword, bcrypt.DefaultCost)
-	u.PasswordHash = string(passwordHash)
+	u.Password = string(passwordHash)
 
 	return nil
 }
 
 func (u *UserModel) checkPassword(password string) error {
 	bytePassword := []byte(password)
-	byteHashedPassword := []byte(u.PasswordHash)
+	byteHashedPassword := []byte(u.Password)
 	return bcrypt.CompareHashAndPassword(byteHashedPassword, bytePassword)
 }
