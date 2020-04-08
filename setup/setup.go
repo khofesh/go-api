@@ -27,10 +27,6 @@ func Router() *gin.Engine {
 		AllowOrigins:     []string{"http://localhost:3000", "https://localhost:8080"},
 	}))
 
-	r.Use(gin.Logger())
-
-	r.Use(gin.Recovery())
-
 	// Ping test
 	r.GET("/ping", func(c *gin.Context) {
 		c.String(http.StatusOK, "pong")
@@ -39,6 +35,7 @@ func Router() *gin.Engine {
 	// api
 	v1 := r.Group("/api/v0")
 	routes.UserRoute(v1.Group("/users"))
+	routes.SignupRoute(v1.Group("/auth"))
 
 	// 404
 	r.NoRoute(func(c *gin.Context) {
