@@ -2,10 +2,9 @@ package models
 
 import (
 	"context"
+	"errors"
 	"fmt"
-	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"github.com/khofesh/simple-go-api/common"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -13,11 +12,11 @@ import (
 )
 
 // CreateUser : create user
-func (u *UserModel) CreateUser(c *gin.Context) error {
+func (u *UserModel) CreateUser() error {
 	collection := common.GetCollection("simple", "users")
 
 	if val, _ := collection.CountDocuments(context.TODO(), bson.M{"email": u.Email}); val != 0 {
-		c.JSON(http.StatusOK, gin.H{"message": "Email already exists"})
+		return errors.New("Email already exists")
 	}
 
 	idxMod := mongo.IndexModel{
