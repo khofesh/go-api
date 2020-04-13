@@ -24,6 +24,7 @@ type UserModel struct {
 	Demo     bool    `bson:"demo" json:"demo" binding:"required"`
 }
 
+// HashPassword : generate password hash
 func (u *UserModel) HashPassword(password string) error {
 	if len(password) == 0 {
 		return errors.New("Password cannot be empty")
