@@ -29,4 +29,6 @@ func Signup(c *gin.Context) {
 	if err = data.CreateUser(); err != nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{"message": err.Error()})
 	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "User is successfully created!"})
 }
