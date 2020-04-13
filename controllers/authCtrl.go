@@ -22,6 +22,11 @@ func Signup(c *gin.Context) {
 		c.JSON(http.StatusNotAcceptable, gin.H{"error": err.Error()})
 	}
 
-	data.HashPassword(data.Password)
-	data.CreateUser(c)
+	if err = data.HashPassword(data.Password); err != nil {
+		c.JSON(http.StatusNotAcceptable, gin.H{"message": err.Error()})
+	}
+
+	if err = data.CreateUser(); err != nil {
+		c.JSON(http.StatusNotAcceptable, gin.H{"message": err.Error()})
+	}
 }
