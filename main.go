@@ -17,7 +17,9 @@ func main() {
 	}
 	var mongoURI string = os.Getenv("MONGO_URI")
 
-	_ = common.InitMongo(mongoURI)
+	if err = common.InitMongo(mongoURI); err != nil {
+		log.Fatal(err.Error())
+	}
 
 	r := setup.Router()
 
