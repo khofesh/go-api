@@ -2,8 +2,8 @@ package common
 
 import (
 	"context"
+	"errors"
 	"fmt"
-	"log"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -13,22 +13,23 @@ import (
 var MoDB *mongo.Client
 
 // InitMongo : initiate connection to mongodb
-func InitMongo(mongoURI string) *mongo.Client {
+func InitMongo(mongoURI string) error {
 	clientOptions := options.Client().ApplyURI(mongoURI)
 
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
-		log.Fatal(err)
+		return errors.New("Error connecting to mongodb")
 	}
 
 	err = client.Ping(context.TODO(), nil)
 	if err != nil {
-		log.Fatal(err)
+		return errors.New("Pinging to mongodb error")
 	}
 	fmt.Println("Connected to MongoDB!")
 
 	MoDB = client
-	return MoDB
+
+	return nil
 }
 
 // GetMongoDB :
