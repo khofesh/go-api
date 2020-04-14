@@ -1,10 +1,11 @@
+### test
 GET http://localhost:8090/api/v0/users/test
 
-###
+### test 404
 
 GET http://localhost:8090/api/v0/sdfsdfsd
 
-###
+### signup
 
 POST http://localhost:8090/api/v0/auth/signup
 content-type: application/json
@@ -17,7 +18,7 @@ content-type: application/json
   "demo": true
 }
 
-###
+### login
 
 POST http://localhost:8090/api/v0/auth/login
 content-type: application/json
@@ -26,3 +27,7 @@ content-type: application/json
   "email": "fahmi@ed.com",
   "password": "something"
 }
+
+### logout
+
+GET http://localhost:8090/api/v0/auth/logout
