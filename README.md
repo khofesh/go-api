@@ -27,3 +27,4 @@ sudo docker run -d -p 27017:27017 --name mongodb mongo:4.2
 # References
 
 1. https://github.com/wangzitian0/golang-gin-starter-kit
+2. https://github.com/Massad/gin-boilerplate
