@@ -7,6 +7,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
@@ -28,7 +29,7 @@ const NBSecretPassword = "A String Very Very Very Strong!!@##$!@#$"
 const NBRandomPassword = "A String Very Very Very Niubilty!!@##$!@#4"
 
 // GenToken : generate  jwt token (used in the request header)
-func GenToken(id uint) string {
+func GenToken(id primitive.ObjectID) string {
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":  id,
 		"exp": time.Now().Add(time.Hour * 24).Unix(),
