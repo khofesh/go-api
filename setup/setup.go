@@ -35,7 +35,7 @@ func Router() *gin.Engine {
 	// api
 	v1 := r.Group("/api/v0")
 	routes.UserRoute(v1.Group("/users"))
-	routes.SignupRoute(v1.Group("/auth"))
+	routes.AuthRoute(v1.Group("/auth"))
 
 	// 404
 	r.NoRoute(func(c *gin.Context) {

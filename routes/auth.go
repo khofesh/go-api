@@ -5,7 +5,8 @@ import (
 	"github.com/khofesh/simple-go-api/controllers"
 )
 
-// SignupRoute : handle route for signing up
-func SignupRoute(router *gin.RouterGroup) {
+// AuthRoute : handle route for signing up
+func AuthRoute(router *gin.RouterGroup) {
 	router.POST("/signup", controllers.Signup)
+	router.POST("/login", controllers.Login)
 }
