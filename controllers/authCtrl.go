@@ -60,8 +60,22 @@ func Login(c *gin.Context) {
 	}
 
 	session := sessions.Default(c)
-	session.Set("sessionData", sessionData)
-	session.Save()
+	session.Options(sessions.Options{
+		Path:     "/",
+		Domain:   "localhost",
+		MaxAge:   0,
+		Secure:   false,
+		HttpOnly: true,
+		SameSite: http.SameSiteStrictMode,
+	})
+	session.Set("user_token", sessionData.Token)
+	session.Set("user_email", sessionData.Email)
+	session.Set("user_id", result.ID.String())
+
+	if session.Save() != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Successfully logged in!", "userData": userData})
 }
