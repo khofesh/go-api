@@ -63,7 +63,7 @@ func Login(c *gin.Context) {
 	session.Options(sessions.Options{
 		Path:     "/",
 		Domain:   "localhost",
-		MaxAge:   0,
+		MaxAge:   60 * 60,
 		Secure:   false,
 		HttpOnly: true,
 		SameSite: http.SameSiteStrictMode,
