@@ -3,6 +3,7 @@ package models
 import (
 	"errors"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -17,11 +18,12 @@ type UserBio struct {
 
 // UserModel : user's model
 type UserModel struct {
-	Email    string  `bson:"email" json:"email" binding:"required"`
-	Bio      UserBio `bson:"bio" json:"bio" binding:"omitempty"`
-	Password string  `bson:"password" json:"password" binding:"required"`
-	Type     string  `bson:"type" json:"type" binding:"required"`
-	Demo     bool    `bson:"demo" json:"demo" binding:"required"`
+	ID       primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	Email    string             `bson:"email" json:"email" binding:"required"`
+	Bio      UserBio            `bson:"bio" json:"bio" binding:"omitempty"`
+	Password string             `bson:"password" json:"password" binding:"required"`
+	Type     string             `bson:"type" json:"type" binding:"required"`
+	Demo     bool               `bson:"demo" json:"demo" binding:"required"`
 }
 
 // HashPassword : generate password hash
@@ -36,7 +38,8 @@ func (u *UserModel) HashPassword(password string) error {
 	return nil
 }
 
-func (u *UserModel) checkPassword(password string) error {
+// CheckPassword : check if login password matches hashed password
+func (u *UserModel) CheckPassword(password string) error {
 	bytePassword := []byte(password)
 	byteHashedPassword := []byte(u.Password)
 	return bcrypt.CompareHashAndPassword(byteHashedPassword, bytePassword)
