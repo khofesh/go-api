@@ -36,7 +36,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	type ReturnData struct {
+	type ResponseData struct {
 		Email string         `json:"email"`
 		Bio   models.UserBio `json:"bio"`
 		Type  string         `json:"type"`
@@ -44,7 +44,7 @@ func Login(c *gin.Context) {
 		Token string         `json:"token"`
 	}
 
-	var sessionData = ReturnData{
+	var sessionData = ResponseData{
 		Email: result.Email,
 		Bio:   result.Bio,
 		Type:  result.Type,
@@ -52,7 +52,7 @@ func Login(c *gin.Context) {
 		Token: common.GenToken(result.ID),
 	}
 
-	var userData = ReturnData{
+	var userData = ResponseData{
 		Email: result.Email,
 		Bio:   result.Bio,
 		Type:  result.Type,
@@ -67,7 +67,12 @@ func Login(c *gin.Context) {
 }
 
 // Logout : handle user's log out
-func Logout() {}
+func Logout(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Clear()
+	session.Save()
+	c.JSON(http.StatusOK, gin.H{"message": "Successfully logged out!"})
+}
 
 // Signup : handle signing up
 func Signup(c *gin.Context) {
