@@ -23,13 +23,14 @@ var JWTMiddleware *jwt.GinJWTMiddleware
 func InitJWT() (*jwt.GinJWTMiddleware, error) {
 	var identityKey = "id"
 
+	coll := common.GetCollection("simple", "users")
+
 	type ResponseData struct {
 		ID    primitive.ObjectID `json:"id,omitempty"`
 		Email string             `json:"email"`
 		Bio   models.UserBio     `json:"bio"`
 		Type  string             `json:"type"`
 		Demo  bool               `json:"demo"`
-		Token string             `json:"token"`
 	}
 
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
@@ -62,8 +63,6 @@ func InitJWT() (*jwt.GinJWTMiddleware, error) {
 				return "", jwt.ErrMissingLoginValues
 			}
 
-			coll := common.GetCollection("simple", "users")
-
 			var result models.UserModel
 			if err = coll.FindOne(context.TODO(), bson.M{"email": data.Email}).Decode(&result); err != nil {
 				return "", jwt.ErrFailedAuthentication
@@ -74,30 +73,14 @@ func InitJWT() (*jwt.GinJWTMiddleware, error) {
 				return "", jwt.ErrFailedAuthentication
 			}
 
+			c.Set("useremail", result.Email)
+
 			var userData = &ResponseData{
 				ID:    result.ID,
 				Email: result.Email,
 				Bio:   result.Bio,
 				Type:  result.Type,
 				Demo:  result.Demo,
-			}
-
-			session := sessions.Default(c)
-			session.Options(sessions.Options{
-				Path:     "/",
-				Domain:   "localhost",
-				MaxAge:   60 * 60,
-				Secure:   false,
-				HttpOnly: true,
-				SameSite: http.SameSiteStrictMode,
-			})
-			session.Set("user_email", result.Email)
-			session.Set("user_id", result.ID)
-			session.Set("user_type", result.Type)
-			session.Set("user_demo", result.Demo)
-
-			if session.Save() != nil {
-				return "", err
 			}
 
 			return userData, err
@@ -126,21 +109,43 @@ func InitJWT() (*jwt.GinJWTMiddleware, error) {
 				Demo  interface{} `json:"demo"`
 			}
 
+			email := c.MustGet("useremail")
+
+			var result models.UserModel
+			if err := coll.FindOne(context.TODO(), bson.M{"email": email}).Decode(&result); err != nil {
+				c.JSON(http.StatusForbidden, gin.H{"message": jwt.ErrFailedAuthentication})
+				return
+			}
+
 			session := sessions.Default(c)
-			userEmail := session.Get("user_email")
-			userID := session.Get("user_id")
-			userType := session.Get("user_type")
-			userDemo := session.Get("user_demo")
+			session.Options(sessions.Options{
+				Path:     "/",
+				Domain:   "localhost",
+				MaxAge:   60 * 60,
+				Secure:   false,
+				HttpOnly: true,
+				SameSite: http.SameSiteStrictMode,
+			})
+			session.Set("user_email", result.Email)
+			session.Set("user_id", result.ID.Hex())
+			session.Set("user_type", result.Type)
+			session.Set("user_demo", result.Demo)
+			session.Set("user_token", token)
+
+			if err := session.Save(); err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+				return
+			}
 
 			c.JSON(code, gin.H{
 				"code":   code,
 				"token":  token,
 				"expire": t,
 				"userData": userData{
-					Email: userEmail,
-					ID:    userID,
-					Type:  userType,
-					Demo:  userDemo,
+					Email: result.Email,
+					ID:    result.ID.Hex(),
+					Type:  result.Type,
+					Demo:  result.Demo,
 				},
 			})
 		},
@@ -151,9 +156,14 @@ func InitJWT() (*jwt.GinJWTMiddleware, error) {
 
 			c.JSON(code, gin.H{"code": code, "message": "Successfully logged out!"})
 		},
-		TokenLookup:   "header: Authorization, query: token, cookie: jwt",
-		TokenHeadName: "Bearer",
-		TimeFunc:      time.Now,
+		TokenLookup:    "header: Authorization, query: token, cookie: token",
+		TokenHeadName:  "Bearer",
+		TimeFunc:       time.Now,
+		SendCookie:     false,
+		SecureCookie:   false, //non HTTPS dev environments
+		CookieHTTPOnly: true,  // JS can't modify
+		CookieDomain:   "localhost",
+		CookieName:     "token", // default jwt
 	})
 
 	JWTMiddleware = authMiddleware
