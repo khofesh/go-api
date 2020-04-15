@@ -17,6 +17,8 @@ func Router() *gin.Engine {
 
 	r := gin.Default()
 
+	middlewares.InitJWT()
+
 	r.Use(middlewares.SecureFunc())
 
 	r.Use(RedisSession())
