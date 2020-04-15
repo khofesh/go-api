@@ -24,6 +24,18 @@ sudo systemctl start docker.service
 sudo docker run -d -p 27017:27017 --name mongodb mongo:4.2
 ```
 
+if you already set it up
+
+```
+sudo docker start mongodb
+```
+
+2. redis
+
+```
+sudo systemctl start redis.service
+```
+
 # References
 
 1. https://github.com/wangzitian0/golang-gin-starter-kit
