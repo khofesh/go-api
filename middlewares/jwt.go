@@ -74,14 +74,6 @@ func InitJWT() (*jwt.GinJWTMiddleware, error) {
 				return "", jwt.ErrFailedAuthentication
 			}
 
-			var sessionData = ResponseData{
-				Email: result.Email,
-				Bio:   result.Bio,
-				Type:  result.Type,
-				Demo:  result.Demo,
-				Token: common.GenToken(result.ID),
-			}
-
 			var userData = &ResponseData{
 				ID:    result.ID,
 				Email: result.Email,
@@ -99,7 +91,7 @@ func InitJWT() (*jwt.GinJWTMiddleware, error) {
 				HttpOnly: true,
 				SameSite: http.SameSiteStrictMode,
 			})
-			session.Set("user_email", sessionData.Email)
+			session.Set("user_email", userData.Email)
 			session.Set("user_id", result.ID.String())
 
 			if session.Save() != nil {
