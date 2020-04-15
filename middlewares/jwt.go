@@ -91,8 +91,10 @@ func InitJWT() (*jwt.GinJWTMiddleware, error) {
 				HttpOnly: true,
 				SameSite: http.SameSiteStrictMode,
 			})
-			session.Set("user_email", userData.Email)
-			session.Set("user_id", result.ID.String())
+			session.Set("user_email", result.Email)
+			session.Set("user_id", result.ID)
+			session.Set("user_type", result.Type)
+			session.Set("user_demo", result.Demo)
 
 			if session.Save() != nil {
 				return "", err
@@ -115,6 +117,39 @@ func InitJWT() (*jwt.GinJWTMiddleware, error) {
 				"code":    code,
 				"message": message,
 			})
+		},
+		LoginResponse: func(c *gin.Context, code int, token string, t time.Time) {
+			type userData struct {
+				ID    interface{} `json:"id,omitempty"`
+				Email interface{} `json:"email"`
+				Type  interface{} `json:"type"`
+				Demo  interface{} `json:"demo"`
+			}
+
+			session := sessions.Default(c)
+			userEmail := session.Get("user_email")
+			userID := session.Get("user_id")
+			userType := session.Get("user_type")
+			userDemo := session.Get("user_demo")
+
+			c.JSON(code, gin.H{
+				"code":   code,
+				"token":  token,
+				"expire": t,
+				"userData": userData{
+					Email: userEmail,
+					ID:    userID,
+					Type:  userType,
+					Demo:  userDemo,
+				},
+			})
+		},
+		LogoutResponse: func(c *gin.Context, code int) {
+			session := sessions.Default(c)
+			session.Clear()
+			session.Save()
+
+			c.JSON(code, gin.H{"code": code, "message": "Successfully logged out!"})
 		},
 		TokenLookup:   "header: Authorization, query: token, cookie: jwt",
 		TokenHeadName: "Bearer",
