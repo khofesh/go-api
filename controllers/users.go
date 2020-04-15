@@ -12,6 +12,7 @@ import (
 func UserRetrieve(c *gin.Context) {
 	session := sessions.Default(c)
 	email := session.Get("user_email")
+	token := session.Get("user_token")
 
-	c.JSON(http.StatusOK, gin.H{"message": "Success getting user", "email": email})
+	c.JSON(http.StatusOK, gin.H{"message": "Success getting user", "email": email, "token": token})
 }
