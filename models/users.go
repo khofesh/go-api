@@ -18,12 +18,13 @@ type UserBio struct {
 
 // UserModel : user's model
 type UserModel struct {
-	ID       primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
-	Email    string             `bson:"email" json:"email" binding:"required"`
-	Bio      UserBio            `bson:"bio" json:"bio" binding:"omitempty"`
-	Password string             `bson:"password" json:"password" binding:"required"`
-	Type     string             `bson:"type" json:"type" binding:"required"`
-	Demo     bool               `bson:"demo" json:"demo" binding:"required"`
+	ID         primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	Email      string             `bson:"email" json:"email" binding:"required"`
+	Bio        UserBio            `bson:"bio" json:"bio" binding:"omitempty"`
+	Password   string             `bson:"password" json:"password" binding:"required"`
+	Type       string             `bson:"type" json:"type" binding:"required"`
+	Demo       bool               `bson:"demo" json:"demo" binding:"required"`
+	Securities []SecuritiesModel  `bson:"securities,omitempty" json:"securities"`
 }
 
 // HashPassword : generate password hash
