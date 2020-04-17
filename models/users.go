@@ -25,6 +25,8 @@ type UserModel struct {
 	Type       string               `bson:"type" json:"type" binding:"required"`
 	Demo       bool                 `bson:"demo" json:"demo" binding:"required"`
 	Securities []primitive.ObjectID `bson:"securities,omitempty" json:"securities"`
+	Trade      []primitive.ObjectID `bson:"trade" json:"trade"`
+	Stock      []primitive.ObjectID `bson:"stock" json:"stock"`
 }
 
 // HashPassword : generate password hash
