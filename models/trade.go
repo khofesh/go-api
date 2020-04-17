@@ -6,8 +6,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// PortofolioModel ...
-type PortofolioModel struct {
+// TradeModel ...
+type TradeModel struct {
 	ID             primitive.ObjectID `bson:"_id" json:"id"`
 	BuyDate        time.Time          `bson:"buydate" json:"buydate"`
 	Shares         float64            `bson:"shares" json:"shares"`
@@ -20,4 +20,6 @@ type PortofolioModel struct {
 	ROI            float32            `bson:"roi" json:"roi"`
 	BreakSellPrice float64            `bson:"breaksellprice" json:"breaksellprice"`
 	SellDate       time.Time          `bson:"selldate" json:"selldate"`
+	SecuritiesID   primitive.ObjectID `bson:"securities_id" json:"securities_id"`
+	StockID        primitive.ObjectID `bson:"stock_id" json:"stock_id"`
 }
