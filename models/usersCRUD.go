@@ -38,10 +38,39 @@ func (u *UserModel) CreateUser() error {
 }
 
 // FindOneUser : find a user
-func FindOneUser() {}
+func FindOneUser(filter bson.M) (UserModel, error) {
+	var result UserModel
+
+	coll := common.GetCollection("simple", "users")
+
+	err := coll.FindOne(context.TODO(), filter).Decode(&result)
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
+}
 
 // UpdateUser : update user's data
-func UpdateUser() {}
+func (u *UserModel) UpdateUser(update bson.M) error {
+	coll := common.GetCollection("simple", "users")
+
+	_, err := coll.UpdateOne(context.TODO(), bson.M{"email": u.Email}, update)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 // DeleteUser : delete user's data
-func DeleteUser() {}
+func DeleteUser(filter bson.M) error {
+	coll := common.GetCollection("simple", "users")
+
+	_, err := coll.DeleteOne(context.TODO(), filter)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
