@@ -23,13 +23,13 @@ func (u *UserModel) CreateUser() error {
 		Keys: bson.M{"email": 1}, Options: options.Index().SetUnique(true),
 	}
 
-	names, idxerr := collection.Indexes().CreateOne(context.TODO(), idxMod)
-	if idxerr != nil {
-		return idxerr
+	names, err := collection.Indexes().CreateOne(context.TODO(), idxMod)
+	if err != nil {
+		return err
 	}
 	fmt.Printf("created indexes %v\n", names)
 
-	_, err := collection.InsertOne(context.TODO(), u)
+	_, err = collection.InsertOne(context.TODO(), u)
 	if err != nil {
 		return err
 	}
@@ -43,8 +43,7 @@ func FindOneUser(filter bson.M) (UserModel, error) {
 
 	coll := common.GetCollection("simple", "users")
 
-	err := coll.FindOne(context.TODO(), filter).Decode(&result)
-	if err != nil {
+	if err := coll.FindOne(context.TODO(), filter).Decode(&result); err != nil {
 		return result, err
 	}
 
