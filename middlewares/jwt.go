@@ -58,18 +58,16 @@ func InitJWT() (*jwt.GinJWTMiddleware, error) {
 		Authenticator: func(c *gin.Context) (interface{}, error) {
 			var data forms.SigninData
 
-			err := c.ShouldBindJSON(&data)
-			if err != nil {
+			if err := c.ShouldBindJSON(&data); err != nil {
 				return "", jwt.ErrMissingLoginValues
 			}
 
 			var result models.UserModel
-			if err = coll.FindOne(context.TODO(), bson.M{"email": data.Email}).Decode(&result); err != nil {
+			if err := coll.FindOne(context.TODO(), bson.M{"email": data.Email}).Decode(&result); err != nil {
 				return "", jwt.ErrFailedAuthentication
 			}
 
-			err = result.CheckPassword(data.Password)
-			if err != nil {
+			if err := result.CheckPassword(data.Password); err != nil {
 				return "", jwt.ErrFailedAuthentication
 			}
 
@@ -83,7 +81,7 @@ func InitJWT() (*jwt.GinJWTMiddleware, error) {
 				Demo:  result.Demo,
 			}
 
-			return userData, err
+			return userData, nil
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
 			session := sessions.Default(c)
