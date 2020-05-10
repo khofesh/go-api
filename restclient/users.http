@@ -31,3 +31,13 @@ content-type: application/json
 ### logout
 
 GET http://localhost:8090/api/v0/auth/logout
+
+### admin login
+
+POST http://localhost:8090/api/v0/auth/login-admin
+content-type: application/json
+
+{
+  "email": "someone@something.com",
+  "password": "password"
+}
