@@ -13,14 +13,17 @@ type Bio struct {
 
 // Model : user's model
 type Model struct {
-	ID         primitive.ObjectID   `bson:"_id,omitempty" json:"_id,omitempty"`
-	Email      string               `bson:"email" json:"email" binding:"required"`
-	Bio        Bio                  `bson:"bio" json:"bio" binding:"omitempty"`
-	Password   string               `bson:"password" json:"password" binding:"required"`
-	Type       string               `bson:"type" json:"type" binding:"required"`
-	Demo       bool                 `bson:"demo" json:"demo" binding:"required"`
-	Role       string               `bson:"role" json:"role" binding:"required"`
-	Securities []primitive.ObjectID `bson:"securities,omitempty" json:"securities"`
-	Trade      []primitive.ObjectID `bson:"trade" json:"trade"`
-	Stock      []primitive.ObjectID `bson:"stock" json:"stock"`
+	ID         primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	Email      string             `bson:"email" json:"email" binding:"required"`
+	Bio        Bio                `bson:"bio" json:"bio" binding:"omitempty"`
+	Password   string             `bson:"password" json:"password" binding:"required"`
+	Role       string             `bson:"role" json:"role" binding:"required"`
+	EmployeeID string             `bson:"employee_id" json:"employee_id" binding:"required"`
+}
+
+// Example ... A sample use
+var Example = Model{
+	ID:       primitive.NewObjectID(),
+	Email:    "someone@something.com",
+	Password: "password",
 }
