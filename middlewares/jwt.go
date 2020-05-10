@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -36,7 +37,7 @@ func InitJWT() (*jwt.GinJWTMiddleware, error) {
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:            "simpleApi",
 		SigningAlgorithm: "HS256",
-		Key:              []byte(common.NBSecretPassword),
+		Key:              []byte(os.Getenv("JWT_ACCESS_KEY")),
 		Timeout:          time.Hour,
 		MaxRefresh:       time.Hour,
 		IdentityKey:      identityKey,
