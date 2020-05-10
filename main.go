@@ -21,6 +21,11 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
+	err = common.InitRedis()
+	if err != nil {
+		log.Fatal("Error loading .env files")
+	}
+
 	r := setup.Router()
 
 	r.Run(":8090")
