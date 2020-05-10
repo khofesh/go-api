@@ -12,4 +12,6 @@ func AuthRoute(router *gin.RouterGroup) {
 	router.POST("/login", middlewares.JWTMiddleware.LoginHandler)
 	router.GET("/refresh_token", middlewares.JWTMiddleware.RefreshHandler)
 	router.GET("/logout", middlewares.JWTMiddleware.LogoutHandler)
+
+	router.POST("/login-admin", controllers.AdminLogin)
 }
