@@ -41,3 +41,17 @@ content-type: application/json
   "email": "someone@something.com",
   "password": "password"
 }
+
+### admin logout
+GET http://localhost:8090/api/v0/auth/logout-admin
+content-type: application/json
+Authorization: token aaa
+
+### create todo
+POST http://localhost:8090/api/v0/todo/create
+Content-Type: application/json
+Authorization: token aaa
+
+{
+  "title": "Test jwt"
+}
