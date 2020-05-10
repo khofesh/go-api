@@ -40,3 +40,4 @@ sudo systemctl start redis.service
 
 1. https://github.com/wangzitian0/golang-gin-starter-kit
 2. https://github.com/Massad/gin-boilerplate
+3. https://www.nexmo.com/blog/2020/03/13/using-jwt-for-authentication-in-a-golang-application-dr
