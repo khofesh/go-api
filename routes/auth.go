@@ -14,4 +14,5 @@ func AuthRoute(router *gin.RouterGroup) {
 	router.GET("/logout", middlewares.JWTMiddleware.LogoutHandler)
 
 	router.POST("/login-admin", controllers.AdminLogin)
+	router.GET("/logout-admin", middlewares.TokenAuthMiddleware(), controllers.AdminLogout)
 }
