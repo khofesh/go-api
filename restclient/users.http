@@ -34,7 +34,7 @@ GET http://localhost:8090/api/v0/auth/logout
 
 ### admin login
 
-POST http://localhost:8090/api/v0/auth/login-admin
+POST http://localhost:8090/api/v0/admin/login
 content-type: application/json
 
 {
@@ -43,9 +43,17 @@ content-type: application/json
 }
 
 ### admin logout
-GET http://localhost:8090/api/v0/auth/logout-admin
+GET http://localhost:8090/api/v0/admin/logout
 content-type: application/json
 Authorization: token aaa
+
+### admin refresh
+POST http://localhost:8090/api/v0/admin/refresh-token
+Content-Type: application/json
+
+{
+  "refresh_token": "aaa"
+}
 
 ### create todo
 POST http://localhost:8090/api/v0/todo/create
