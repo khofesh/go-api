@@ -39,6 +39,7 @@ func Router() *gin.Engine {
 	routes.UserRoute(v1.Group("/users"))
 	routes.AuthRoute(v1.Group("/auth"))
 	routes.TodoRoute(v1.Group("/todo"))
+	routes.AuthAdminRoute(v1.Group("/admin"))
 
 	// 404
 	r.NoRoute(func(c *gin.Context) {
