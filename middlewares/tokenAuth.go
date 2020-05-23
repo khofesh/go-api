@@ -12,7 +12,7 @@ func TokenAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := common.ValidateToken(c.Request)
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, err.Error())
+			c.JSON(http.StatusUnauthorized, "Invalid Token!")
 			c.Abort()
 			return
 		}
