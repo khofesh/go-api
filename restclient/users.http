@@ -63,3 +63,17 @@ Authorization: token aaa
 {
   "title": "Test jwt"
 }
+
+### admin CRUD ###
+##################
+POST http://localhost:8090/api/v0/admin/crud/create-admin
+content-type: application/json
+Authorization: token aaa
+
+{
+  "email": "fahmi@ed.com",
+  "password": "something",
+  "passwordConfirmation": "something",
+  "type": "nonSubscriber",
+  "demo": true
+}
