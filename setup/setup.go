@@ -34,12 +34,16 @@ func Router() *gin.Engine {
 		c.String(http.StatusOK, "pong")
 	})
 
-	// api
-	v1 := r.Group("/api/v0")
-	routes.UserRoute(v1.Group("/users"))
-	routes.AuthRoute(v1.Group("/auth"))
-	routes.TodoRoute(v1.Group("/todo"))
-	routes.AuthAdminRoute(v1.Group("/admin"))
+	// api routes
+	v0 := r.Group("/api/v0")
+	routes.UserRoute(v0.Group("/users"))
+	routes.AuthRoute(v0.Group("/auth"))
+	routes.TodoRoute(v0.Group("/todo"))
+
+	v0Admin := r.Group("/api/v0/admin")
+	routes.AuthAdminRoute(v0Admin)
+	v0Admin.Use(middlewares.TokenAuthMiddleware())
+	routes.CRUDAdminRoutes(v0Admin.Group("/crud"))
 
 	// 404
 	r.NoRoute(func(c *gin.Context) {
