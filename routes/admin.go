@@ -12,3 +12,8 @@ func AuthAdminRoute(router *gin.RouterGroup) {
 	router.POST("/refresh-token", controllers.RefreshToken)
 	router.GET("/logout", middlewares.TokenAuthMiddleware(), controllers.AdminLogout)
 }
+
+// CRUDAdminRoutes ...
+func CRUDAdminRoutes(router *gin.RouterGroup) {
+	router.POST("/create-admin", controllers.CreateOneAdmin)
+}
