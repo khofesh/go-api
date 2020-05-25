@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/khofesh/simple-go-api/common"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -32,6 +33,11 @@ func (u *Model) CheckPassword(password string) error {
 	return bcrypt.CompareHashAndPassword(byteHashedPassword, bytePassword)
 }
 
+// GenerateEmployeeID ...
+func (u *Model) GenerateEmployeeID() {
+	u.EmployeeID = uuid.Must(uuid.NewRandom()).String()
+}
+
 // CreateAdmin ...
 func (u *Model) CreateAdmin() error {
 	coll := common.GetCollection("simple", "admins")
@@ -39,6 +45,9 @@ func (u *Model) CreateAdmin() error {
 	if val, _ := coll.CountDocuments(context.TODO(), bson.M{"email": u.Email}); val != 0 {
 		return errors.New("Email already exists")
 	}
+
+	// set PasswordConfirmation to empty string
+	u.PasswordConfirmation = ""
 
 	idxMod := mongo.IndexModel{
 		Keys: bson.M{"email": 1}, Options: options.Index().SetUnique(true),
