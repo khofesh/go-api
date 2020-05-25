@@ -42,8 +42,8 @@ POST http://localhost:8090/api/v0/admin/login
 content-type: application/json
 
 {
-  "email": "someone@something.com",
-  "password": "password"
+  "email": "fahmi@backoffice.com",
+  "password": "something88888"
 }
 
 ### admin logout
