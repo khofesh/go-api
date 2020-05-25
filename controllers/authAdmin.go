@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"os"
@@ -10,32 +11,39 @@ import (
 	"github.com/khofesh/simple-go-api/common"
 	"github.com/khofesh/simple-go-api/forms"
 	"github.com/khofesh/simple-go-api/models/adminmodel"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // AdminLogin ...
 func AdminLogin(c *gin.Context) {
-	var user forms.LoginAdminData
+	var loginData forms.LoginAdminData
 
-	if err := c.ShouldBindJSON(&user); err != nil {
+	if err := c.ShouldBindJSON(&loginData); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, "Invalid json provided")
 		return
 	}
 
-	if user.Email != adminmodel.Example.Email || user.Password != adminmodel.Example.Password {
-		c.JSON(http.StatusUnauthorized, "Please provide valid login details")
+	coll := common.GetCollection("simple", "admins")
+
+	var adminData adminmodel.Model
+	if err := coll.FindOne(context.TODO(), bson.M{"email": loginData.Email}).Decode(&adminData); err != nil {
+		c.JSON(http.StatusNotAcceptable, gin.H{"message": "Wrong password or email!"})
 		return
 	}
 
-	var result = adminmodel.Example
+	if err := adminData.CheckPassword(loginData.Password); err != nil {
+		c.JSON(http.StatusOK, gin.H{"message": "Wrong password or email!"})
+		return
+	}
 
-	ts, err := common.CreateToken(result.ID)
+	ts, err := common.CreateToken(adminData.ID)
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 
-	err = common.CreateAuth(result.ID, ts)
+	err = common.CreateAuth(adminData.ID, ts)
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, err.Error())
 	}
