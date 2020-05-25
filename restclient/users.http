@@ -32,6 +32,10 @@ content-type: application/json
 
 GET http://localhost:8090/api/v0/auth/logout
 
+#############################################
+#                 ADMIN                     #
+#############################################
+
 ### admin login
 
 POST http://localhost:8090/api/v0/admin/login
@@ -71,9 +75,8 @@ content-type: application/json
 Authorization: token aaa
 
 {
-  "email": "fahmi@ed.com",
-  "password": "something",
-  "passwordConfirmation": "something",
-  "type": "nonSubscriber",
-  "demo": true
+  "email": "fahmi@backoffice.com",
+  "password": "something88888",
+  "passwordConfirmation": "something88888",
+  "role": "admin"
 }
