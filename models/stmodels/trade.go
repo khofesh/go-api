@@ -1,4 +1,4 @@
-package models
+package stmodels
 
 import (
 	"sync"
@@ -7,8 +7,20 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// TradeModel ...
-type TradeModel struct {
+// Trade ...
+type Trade struct {
+	ID           primitive.ObjectID `bson:"_id" json:"id"`
+	Date         time.Time          `bson:"date" json:"date"`
+	Price        float64            `bson:"price" json:"price"`
+	Buy          bool               `bson:"buy" json:"buy"`
+	Sell         bool               `bson:"sell" json:"sell"`
+	SecuritiesID primitive.ObjectID `bson:"securities_id" json:"securities_id"`
+	StockID      primitive.ObjectID `bson:"stock_id" json:"stock_id"`
+	UserID       primitive.ObjectID `bson:"user_id" json:"user_id"`
+}
+
+// StockProfit ...
+type StockProfit struct {
 	ID             primitive.ObjectID `bson:"_id" json:"id"`
 	BuyDate        time.Time          `bson:"buydate" json:"buydate"`
 	Shares         float64            `bson:"shares" json:"shares"`
@@ -28,6 +40,6 @@ type TradeModel struct {
 }
 
 // Calculate break-even selling price
-func (trade *TradeModel) Calculate() {
+func (trade *Trade) Calculate() {
 
 }

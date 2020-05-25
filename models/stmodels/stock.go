@@ -1,4 +1,4 @@
-package models
+package stmodels
 
 import (
 	"context"
@@ -12,8 +12,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// StockModel ... salah nama, should've been stock
-type StockModel struct {
+// Stock ... salah nama, should've been stock
+type Stock struct {
 	ID           primitive.ObjectID `bson:"_id" json:"id"`
 	EntityName   string             `bson:"entityName" json:"entityName"`
 	EntityCode   string             `bson:"entityCode" json:"entityCode"`
@@ -23,7 +23,7 @@ type StockModel struct {
 }
 
 // CreateStock ...
-func (stock *StockModel) CreateStock() error {
+func (stock *Stock) CreateStock() error {
 	coll := common.GetCollection("simple", "stock")
 
 	if val, _ := coll.CountDocuments(context.TODO(), bson.M{"entityName": stock.EntityName}); val != 0 {
@@ -51,7 +51,7 @@ func (stock *StockModel) CreateStock() error {
 }
 
 // UpdateStock ...
-func (stock *StockModel) UpdateStock(update bson.M) error {
+func (stock *Stock) UpdateStock(update bson.M) error {
 	coll := common.GetCollection("simple", "stock")
 
 	_, err := coll.UpdateOne(context.TODO(), bson.M{"entityName": stock.EntityName}, update)
@@ -63,7 +63,7 @@ func (stock *StockModel) UpdateStock(update bson.M) error {
 }
 
 // DeleteStock ...
-func (stock *StockModel) DeleteStock() error {
+func (stock *Stock) DeleteStock() error {
 	coll := common.GetCollection("simple", "stock")
 
 	_, err := coll.DeleteOne(context.TODO(), bson.M{"entityName": stock.EntityName})
