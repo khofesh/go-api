@@ -27,13 +27,15 @@ func CreateOneAdmin(c *gin.Context) {
 	var adminData adminmodel.Model
 
 	if err = c.ShouldBindJSON(&adminData); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, "invalid json")
+		c.JSON(http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 
 	if err = adminData.HashPassword(adminData.Password); err != nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{"message": err.Error()})
 	}
+
+	adminData.GenerateEmployeeID()
 
 	if err = adminData.CreateAdmin(); err != nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{"message": err.Error()})
