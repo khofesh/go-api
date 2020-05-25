@@ -13,12 +13,13 @@ type Bio struct {
 
 // Model : user's model
 type Model struct {
-	ID         primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
-	Email      string             `bson:"email" json:"email" binding:"required"`
-	Bio        Bio                `bson:"bio" json:"bio" binding:"omitempty"`
-	Password   string             `bson:"password" json:"password" binding:"required"`
-	Role       string             `bson:"role" json:"role" binding:"required"`
-	EmployeeID string             `bson:"employee_id" json:"employee_id" binding:"required"`
+	ID                   primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	Email                string             `bson:"email" json:"email" binding:"required,email"`
+	Bio                  Bio                `bson:"bio" json:"bio" binding:"omitempty"`
+	Password             string             `bson:"password" json:"password" binding:"required,min=8"`
+	PasswordConfirmation string             `json:"passwordConfirmation" binding:"required,min=8,eqfield=Password"`
+	Role                 string             `bson:"role" json:"role" binding:"required"`
+	EmployeeID           string             `bson:"employee_id" json:"employee_id" binding:"omitempty"`
 }
 
 // Example ... A sample use
