@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/khofesh/simple-go-api/common"
 	"github.com/khofesh/simple-go-api/forms"
@@ -14,6 +15,12 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
+
+type loginResponse struct {
+	ID    interface{} `json:"id,omitempty"`
+	Email interface{} `json:"email"`
+	Role  interface{} `json:"role"`
+}
 
 // AdminLogin ...
 func AdminLogin(c *gin.Context) {
@@ -43,36 +50,51 @@ func AdminLogin(c *gin.Context) {
 		return
 	}
 
-	err = common.CreateAuth(adminData.ID, ts)
-	if err != nil {
-		c.JSON(http.StatusUnprocessableEntity, err.Error())
+	session := sessions.Default(c)
+	session.Options(sessions.Options{
+		Path:     "/",
+		Domain:   "localhost",
+		MaxAge:   60 * 60,
+		Secure:   false,
+		HttpOnly: true,
+		SameSite: http.SameSiteStrictMode,
+	})
+	session.Set("email", adminData.Email)
+	session.Set("id", adminData.ID.Hex())
+	session.Set("access_token", ts.AccessToken)
+	session.Set("refresh_token", ts.RefreshToken)
+
+	if err := session.Save(); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		return
 	}
 
-	tokens := map[string]string{
-		"access_token":  ts.AccessToken,
-		"refresh_token": ts.RefreshToken,
-	}
-
-	c.JSON(http.StatusOK, tokens)
+	c.JSON(http.StatusOK, gin.H{
+		"access_token":   ts.AccessToken,
+		"access_expire":  ts.AtExpires,
+		"refresh_token":  ts.RefreshToken,
+		"refresh_expire": ts.RtExpires,
+		"userData": loginResponse{
+			ID:    adminData.ID.Hex(),
+			Email: adminData.Email,
+			Role:  adminData.Role,
+		},
+	})
 }
 
 // AdminLogout ...
 func AdminLogout(c *gin.Context) {
 	var err error
-	var deleted int64
-	var accessDetails *common.AccessDetails
 
-	accessDetails, err = common.ExtractTokenMetadata(c.Request)
+	_, err = common.ExtractTokenMetadata(c.Request)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, "unauthorized")
 		return
 	}
 
-	deleted, err = common.DeleteAuth(accessDetails.AccessUUID)
-	if err != nil || deleted == 0 {
-		c.JSON(http.StatusUnauthorized, "unauthorized")
-		return
-	}
+	session := sessions.Default(c)
+	session.Clear()
+	session.Save()
 
 	c.JSON(http.StatusOK, "Successfully logged out")
 }
@@ -107,7 +129,9 @@ func RefreshToken(c *gin.Context) {
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
-		refreshUUID, ok := claims["refresh_uuid"].(string)
+		session := sessions.Default(c)
+
+		_, ok := claims["refresh_uuid"].(string)
 		if !ok {
 			c.JSON(http.StatusUnprocessableEntity, err)
 			return
@@ -116,12 +140,6 @@ func RefreshToken(c *gin.Context) {
 		userID, ok := claims["user_id"].(string)
 		if !ok {
 			c.JSON(http.StatusUnprocessableEntity, "Error occurred")
-			return
-		}
-
-		deleted, delErr := common.DeleteAuth(refreshUUID)
-		if delErr != nil || deleted == 0 {
-			c.JSON(http.StatusUnauthorized, "unauthorized")
 			return
 		}
 
@@ -138,9 +156,10 @@ func RefreshToken(c *gin.Context) {
 			return
 		}
 
-		err = common.CreateAuth(objectID, ts)
-		if err != nil {
-			c.JSON(http.StatusForbidden, err.Error())
+		session.Set("access_token", ts.AccessToken)
+		session.Set("refresh_token", ts.RefreshToken)
+		if err := session.Save(); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
