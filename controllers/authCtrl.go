@@ -14,7 +14,7 @@ import (
 
 // Login : handle user's login
 func Login(c *gin.Context) {
-	var data forms.SigninData
+	var data forms.LoginUserData
 
 	err := c.ShouldBindJSON(&data)
 	if err != nil {

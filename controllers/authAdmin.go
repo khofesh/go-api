@@ -15,7 +15,7 @@ import (
 
 // AdminLogin ...
 func AdminLogin(c *gin.Context) {
-	var user forms.SigninData
+	var user forms.LoginAdminData
 
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, "Invalid json provided")

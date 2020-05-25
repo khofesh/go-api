@@ -57,7 +57,7 @@ func InitJWT() (*jwt.GinJWTMiddleware, error) {
 			}
 		},
 		Authenticator: func(c *gin.Context) (interface{}, error) {
-			var data forms.SigninData
+			var data forms.LoginUserData
 
 			if err := c.ShouldBindJSON(&data); err != nil {
 				return "", jwt.ErrMissingLoginValues
