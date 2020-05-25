@@ -175,3 +175,33 @@ func RefreshToken(c *gin.Context) {
 	return
 
 }
+
+// CheckSession ...
+func CheckSession(c *gin.Context) {
+	session := sessions.Default(c)
+	accessToken := session.Get("access_token")
+	if accessToken == nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code":    401,
+			"message": "Session doesn't exist",
+		})
+		return
+	}
+
+	refreshToken := session.Get("refresh_token")
+	userID := session.Get("id")
+	email := session.Get("email")
+	role := session.Get("role")
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":          200,
+		"message":       "Session exists",
+		"access_token":  accessToken,
+		"refresh_token": refreshToken,
+		"userData": loginResponse{
+			ID:    userID,
+			Email: email,
+			Role:  role,
+		},
+	})
+}

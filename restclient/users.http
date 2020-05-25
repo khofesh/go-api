@@ -59,6 +59,9 @@ Content-Type: application/json
   "refresh_token": "aaa"
 }
 
+### admin check session
+GET http://localhost:8090/api/v0/admin/check-session
+
 ### create todo
 POST http://localhost:8090/api/v0/todo/create
 Content-Type: application/json
@@ -80,3 +83,4 @@ Authorization: token aaa
   "passwordConfirmation": "something88888",
   "role": "admin"
 }
+

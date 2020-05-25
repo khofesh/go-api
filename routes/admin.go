@@ -10,6 +10,7 @@ import (
 func AuthAdminRoute(router *gin.RouterGroup) {
 	router.POST("/login", controllers.AdminLogin)
 	router.POST("/refresh-token", controllers.RefreshToken)
+	router.GET("/check-session", controllers.CheckSession)
 	router.GET("/logout", middlewares.TokenAuthMiddleware(), controllers.AdminLogout)
 }
 
