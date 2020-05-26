@@ -9,7 +9,7 @@ import (
 // AuthRoute : handle route for signing up
 func AuthRoute(router *gin.RouterGroup) {
 	router.POST("/signup", controllers.Signup)
-	router.POST("/login", middlewares.JWTMiddleware.LoginHandler)
-	router.GET("/refresh-token", middlewares.JWTMiddleware.RefreshHandler)
-	router.GET("/logout", middlewares.JWTMiddleware.LogoutHandler)
+	router.POST("/login", middlewares.JWT.LoginHandler)
+	router.GET("/refresh-token", middlewares.JWT.RefreshHandler)
+	router.GET("/logout", middlewares.JWT.LogoutHandler)
 }
