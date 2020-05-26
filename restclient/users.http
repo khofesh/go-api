@@ -1,5 +1,6 @@
 ### test
 GET http://localhost:8090/api/v0/users/test
+Authorization: Bearer aaa
 
 ### test 404
 
