@@ -17,8 +17,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// JWTMiddleware ...
-var JWTMiddleware *jwt.GinJWTMiddleware
+// JWT ...
+var JWT *jwt.GinJWTMiddleware
 
 // InitJWT : create auth middleware
 func InitJWT() (*jwt.GinJWTMiddleware, error) {
@@ -34,6 +34,10 @@ func InitJWT() (*jwt.GinJWTMiddleware, error) {
 		Demo  bool               `json:"demo"`
 	}
 
+	type PayloadID struct {
+		ID string
+	}
+
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:            "simpleApi",
 		SigningAlgorithm: "HS256",
@@ -42,18 +46,20 @@ func InitJWT() (*jwt.GinJWTMiddleware, error) {
 		MaxRefresh:       time.Hour,
 		IdentityKey:      identityKey,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
+			fmt.Println("payload data", data)
 			if v, ok := data.(*ResponseData); ok {
 				fmt.Println(v)
 				return jwt.MapClaims{
-					identityKey: v.ID,
+					identityKey: v.ID.Hex(), // convert ObjectID to string Hex
 				}
 			}
 			return jwt.MapClaims{}
 		},
 		IdentityHandler: func(c *gin.Context) interface{} {
 			claims := jwt.ExtractClaims(c)
-			return &ResponseData{
-				ID: claims[identityKey].(primitive.ObjectID),
+
+			return &PayloadID{
+				ID: claims[identityKey].(string),
 			}
 		},
 		Authenticator: func(c *gin.Context) (interface{}, error) {
@@ -86,9 +92,9 @@ func InitJWT() (*jwt.GinJWTMiddleware, error) {
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
 			session := sessions.Default(c)
-			userEmail := session.Get("user_email")
+			userid := session.Get("user_id")
 
-			if v, ok := data.(*models.UserModel); ok && v.Email == userEmail {
+			if v, ok := data.(*PayloadID); ok && v.ID == userid {
 				return true
 			}
 
@@ -165,7 +171,7 @@ func InitJWT() (*jwt.GinJWTMiddleware, error) {
 		CookieName:     "token", // default jwt
 	})
 
-	JWTMiddleware = authMiddleware
+	JWT = authMiddleware
 
 	return authMiddleware, err
 }
