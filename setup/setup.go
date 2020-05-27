@@ -26,7 +26,9 @@ func Router() *gin.Engine {
 	r.Use(cors.New(cors.Config{
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
-		AllowOrigins:     []string{"http://localhost:3000", "https://localhost:8080"},
+		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:8080"},
+		AllowHeaders:     []string{"*"},
+		AllowMethods:     []string{"*"},
 	}))
 
 	// Ping test

@@ -8,7 +8,7 @@ import (
 // SecureFunc : custom middleware
 func SecureFunc() gin.HandlerFunc {
 	secureMiddleware := secure.New(secure.Options{
-		AllowedHosts:            []string{"ssl.example.com"},
+		// AllowedHosts:            []string{"ssl.example.com"},
 		AllowedHostsAreRegex:    false,
 		SSLRedirect:             false,
 		SSLTemporaryRedirect:    false,
