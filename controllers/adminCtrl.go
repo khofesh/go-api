@@ -18,9 +18,9 @@ func CreateOneAdmin(c *gin.Context) {
 		return
 	}
 
-	_, err = common.FetchAuth(tokenAuth)
+	_, err = common.CompareData(c, tokenAuth)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, "unauthorized")
+		c.JSON(http.StatusUnauthorized, err.Error())
 		return
 	}
 

@@ -23,15 +23,15 @@ func CreateTodo(c *gin.Context) {
 		return
 	}
 
-	tokenAuth, err := common.ExtractTokenMetadata(c.Request)
+	extractedToken, err := common.ExtractTokenMetadata(c.Request)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, "unauthorized")
 		return
 	}
 
-	userID, err = common.FetchAuth(tokenAuth)
+	userID, err = common.CompareData(c, extractedToken)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, "unauthorized")
+		c.JSON(http.StatusUnauthorized, err.Error())
 		return
 	}
 
