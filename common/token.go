@@ -1,6 +1,7 @@
 package common
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -8,6 +9,8 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -69,27 +72,6 @@ func CreateToken(userid primitive.ObjectID) (*TokenDetails, error) {
 	return td, nil
 }
 
-// CreateAuth ...
-func CreateAuth(userid primitive.ObjectID, td *TokenDetails) error {
-	at := time.Unix(td.AtExpires, 0)
-	rt := time.Unix(td.RtExpires, 0)
-	now := time.Now()
-
-	client := GetRedis()
-
-	err := client.Set(td.AccessUUID, userid.Hex(), at.Sub(now)).Err()
-	if err != nil {
-		return err
-	}
-
-	err = client.Set(td.RefreshUUID, userid.Hex(), rt.Sub(now)).Err()
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 // ExtractToken ...
 func ExtractToken(r *http.Request) string {
 	token := r.Header.Get("Authorization")
@@ -139,6 +121,7 @@ func ExtractTokenMetadata(r *http.Request) (*AccessDetails, error) {
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
+	fmt.Println("claims", claims)
 	if ok && token.Valid {
 		accessUUID, ok := claims["access_uuid"].(string)
 		if !ok {
@@ -159,25 +142,14 @@ func ExtractTokenMetadata(r *http.Request) (*AccessDetails, error) {
 	return nil, err
 }
 
-// FetchAuth : lookup token metadata in redis
-func FetchAuth(authD *AccessDetails) (string, error) {
-	client := GetRedis()
-	userID, err := client.Get(authD.AccessUUID).Result()
-	if err != nil {
-		return "", err
+// CompareData : compare extracted token data with
+// data stored in redis
+func CompareData(c *gin.Context, authD *AccessDetails) (string, error) {
+	session := sessions.Default(c)
+	userID := session.Get("id")
+	if userID == nil || userID.(string) != authD.UserID {
+		return "", errors.New("Unauthorized")
 	}
 
-	return userID, nil
-}
-
-// DeleteAuth ...
-func DeleteAuth(givenUUID string) (int64, error) {
-	client := GetRedis()
-
-	deleted, err := client.Del(givenUUID).Result()
-	if err != nil {
-		return 0, err
-	}
-
-	return deleted, nil
+	return userID.(string), nil
 }
