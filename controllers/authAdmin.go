@@ -62,7 +62,9 @@ func AdminLogin(c *gin.Context) {
 	session.Set("email", adminData.Email)
 	session.Set("id", adminData.ID.Hex())
 	session.Set("access_token", ts.AccessToken)
+	session.Set("access_expire", ts.AtExpires)
 	session.Set("refresh_token", ts.RefreshToken)
+	session.Set("refresh_expire", ts.RtExpires)
 
 	if err := session.Save(); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
@@ -192,12 +194,16 @@ func CheckSession(c *gin.Context) {
 	userID := session.Get("id")
 	email := session.Get("email")
 	role := session.Get("role")
+	atExpire := session.Get("access_expire")
+	rtExpire := session.Get("refresh_expire")
 
 	c.JSON(http.StatusOK, gin.H{
-		"code":          200,
-		"message":       "Session exists",
-		"access_token":  accessToken,
-		"refresh_token": refreshToken,
+		"code":           200,
+		"message":        "Session exists",
+		"access_token":   accessToken,
+		"access_expire":  atExpire,
+		"refresh_token":  refreshToken,
+		"refresh_expire": rtExpire,
 		"userData": loginResponse{
 			ID:    userID,
 			Email: email,
