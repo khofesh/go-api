@@ -86,13 +86,13 @@ func AdminLogin(c *gin.Context) {
 
 // AdminLogout ...
 func AdminLogout(c *gin.Context) {
-	var err error
+	// var err error
 
-	_, err = common.ExtractTokenMetadata(c.Request)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, "unauthorized")
-		return
-	}
+	// _, err = common.ExtractTokenMetadata(c.Request)
+	// if err != nil {
+	// 	c.JSON(http.StatusUnauthorized, "unauthorized")
+	// 	return
+	// }
 
 	session := sessions.Default(c)
 	session.Clear()
