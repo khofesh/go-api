@@ -98,7 +98,8 @@ func AdminLogout(c *gin.Context) {
 	session.Clear()
 	session.Save()
 
-	c.JSON(http.StatusOK, "Successfully logged out")
+	c.JSON(http.StatusOK, gin.H{"code": http.StatusOK, "msg": "Successfully logged out"})
+	return
 }
 
 // RefreshToken ...
@@ -173,7 +174,7 @@ func RefreshToken(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusUnauthorized, "refresh expired")
+	c.JSON(http.StatusUnauthorized, gin.H{"code": http.StatusUnauthorized, "msg": "refresh expired"})
 	return
 
 }
