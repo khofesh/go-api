@@ -10,10 +10,10 @@ type Menu struct {
 	RoleCode   string               `bson:"rolecode" json:"rolecode"`
 	RoleName   string               `bson:"rolename" json:"rolename"`
 	Info       string               `bson:"info" json:"info"`
-	canAdd     bool                 `bson:"canAdd" json:"canAdd"`
-	canEdit    bool                 `bson:"canEdit" json:"canEdit"`
-	canView    bool                 `bson:"canView" json:"canView"`
-	canDelete  bool                 `bson:"canDelete" json:"canDelete"`
+	CanAdd     bool                 `bson:"canAdd" json:"canAdd"`
+	CanEdit    bool                 `bson:"canEdit" json:"canEdit"`
+	CanView    bool                 `bson:"canView" json:"canView"`
+	CanDelete  bool                 `bson:"canDelete" json:"canDelete"`
 	EntryDate  string               `bson:"entryDate" json:"entryDate"`
 	UpdateDate string               `bson:"updateDate" json:"updateDate"`
 	UserID     []primitive.ObjectID `bson:"user_id" json:"user_id"`
