@@ -54,10 +54,10 @@ func AdminLogin(c *gin.Context) {
 	session.Options(sessions.Options{
 		Path:     "/",
 		Domain:   "localhost",
-		MaxAge:   60 * 60,
+		MaxAge:   60 * 60 * 24,
 		Secure:   false,
 		HttpOnly: true,
-		SameSite: http.SameSiteStrictMode,
+		SameSite: http.SameSiteLaxMode,
 	})
 	session.Set("email", adminData.Email)
 	session.Set("id", adminData.ID.Hex())
