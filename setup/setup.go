@@ -2,9 +2,7 @@ package setup
 
 import (
 	"net/http"
-	"time"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/khofesh/simple-go-api/middlewares"
 	"github.com/khofesh/simple-go-api/routes"
@@ -16,20 +14,11 @@ func Router() *gin.Engine {
 	// gin.SetMode(gin.ReleaseMode)
 
 	r := gin.Default()
+	r.Use(middlewares.SecureFunc())
 
 	middlewares.InitJWT()
 
-	r.Use(middlewares.SecureFunc())
-
 	r.Use(RedisSession())
-
-	r.Use(cors.New(cors.Config{
-		AllowCredentials: true,
-		MaxAge:           12 * time.Hour,
-		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:8080"},
-		AllowHeaders:     []string{"*"},
-		AllowMethods:     []string{"*"},
-	}))
 
 	// Ping test
 	r.GET("/ping", func(c *gin.Context) {
