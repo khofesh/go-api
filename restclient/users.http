@@ -50,7 +50,6 @@ content-type: application/json
 ### admin logout
 GET http://localhost:8090/api/v0/admin/logout
 content-type: application/json
-Authorization: Bearer aaa
 
 ### admin refresh
 POST http://localhost:8090/api/v0/admin/refresh-token
