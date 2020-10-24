@@ -9,7 +9,7 @@ import (
 	"github.com/khofesh/simple-go-api/setup"
 )
 
-func main() {
+func init() {
 	// load env files
 	err := godotenv.Load()
 	if err != nil {
@@ -23,9 +23,11 @@ func main() {
 
 	err = common.InitRedis()
 	if err != nil {
-		log.Fatal("Error loading .env files")
+		log.Fatal("Error initiating redis")
 	}
+}
 
+func main() {
 	r := setup.Router()
 
 	r.Run(":8090")
