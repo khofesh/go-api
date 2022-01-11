@@ -17,23 +17,28 @@ For Fun
 
 # Getting started
 
-1. mongodb docker
+0. start docker
+
+```shell
+sudo systemctl start docker.service
+```
+
+1. mongodb
 
 ```
-sudo systemctl start docker.service
-sudo docker run -d -p 27017:27017 --name mongodb mongo:4.2
+docker run --name fdm-mongo -p 27017:27017 -d mongo
 ```
 
 if you already set it up
 
 ```
-sudo docker start mongodb
+docker start fdm-mongo
 ```
 
 2. redis
 
 ```
-sudo systemctl start redis.service
+docker run -d -p 6379:6379 --name fdm-redis redis
 ```
 
 # References

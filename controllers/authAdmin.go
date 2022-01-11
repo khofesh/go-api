@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt"
 	"github.com/khofesh/simple-go-api/common"
 	"github.com/khofesh/simple-go-api/forms"
 	"github.com/khofesh/simple-go-api/models/adminmodel"
