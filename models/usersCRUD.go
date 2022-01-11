@@ -16,7 +16,7 @@ func (u *UserModel) CreateUser() error {
 	collection := common.GetCollection("simple", "users")
 
 	if val, _ := collection.CountDocuments(context.TODO(), bson.M{"email": u.Email}); val != 0 {
-		return errors.New("Email already exists")
+		return errors.New("email already exists")
 	}
 
 	idxMod := mongo.IndexModel{

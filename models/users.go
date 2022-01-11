@@ -32,7 +32,7 @@ type UserModel struct {
 // HashPassword : generate password hash
 func (u *UserModel) HashPassword(password string) error {
 	if len(password) == 0 {
-		return errors.New("Password cannot be empty")
+		return errors.New("password cannot be empty")
 	}
 	bytePassword := []byte(password)
 	passwordHash, _ := bcrypt.GenerateFromPassword(bytePassword, bcrypt.DefaultCost)
